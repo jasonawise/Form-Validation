@@ -1,117 +1,28 @@
 /**
- * 
- * @description Validates the form, if form is not valid it disables the submit button and shows error messages
- * @param none
- * @returns isValid -- bool whether or not form is valid 
- * 
+ * Name: AERO VALIDATION
+ * Version: 1.0
+ * Desc: This is a custom validation library 
  */
-const validateForm = function (form) {
-    // Gets all the inputs of the form that is not of type submit
-    var inputs = document.querySelectorAll('input:not([type="submit"])');
 
-    // Sets the default isValid bool
-    var isValid = false;
-
-    for (var i = 0; i < form.length; i++) {
-        console.log("In validateForm: " + form[i].isValid);
-    }
-    return isValid;
-}
 
 /**
  * 
- * @description Creates a form object based on the form inputs from the page
- * @param none
- * @returns none
- * 
- */
-const createFormObject = function () {
-    // Gets all the inputs of the form that is not submit
-    var inputs = document.querySelectorAll('input:not([type="submit"])');
-
-    // Create an empty form object
-    var form = {}
-
-    // Loops through array and adds inputs from the form to the empty form object
-    // Also, should run validation based on input type
-    for (var i = 0; i < inputs.length; i++) {
-        form[inputs[i].name] = {
-            value: inputs[i].value
-        };
-        form[inputs[i].name].isValid = "";
-    }
-    return form;
-}
-
-/**
- * 
- * @description Validates the text field
+ * @description Checks to see if the input contains text
  * @param input -- field to validate
  * @returns isValid -- bool whether or not field is valid 
  * 
  */
-const validateText = function (input, currentField) {
+const containsText = function (input) {
     var isValid = false;
-    var fieldValue = input.value;
-    var fieldType = input.type;
 
-    // console.log(currentField);
-
-    if (!containsNumbers(fieldValue)) {
+    if (!containsNumbers(input)) {
         isValid = true;
+        console.log('validateText is: ' + isValid)
+
     } else {
-        input.errorMessage = "Must Contain only letters."
+        console.log('validateText is: ' + isValid)
     }
-    // if (!isValid) {
-    //     // console.log(input.errorMessage)
-    // }
     return isValid;
-}
-
-/**
- * 
- * @description Validates for a Number only, allows you to add an optional numberlength to test for
- *              numbers that need a certain length, ex: Phone Numbers
- * @param field -- number to validate: also takes optional number length to test for a number with a 
- *              certain link
- * @returns isNumber -- bool is it a number and optionally does it match the number length
- * 
- */
-const validateNumber = function (input, numberLength) {
-    var isNumber;
-    var fieldValue = input.value;
-    var length = fieldValue.toString().length
-
-    if (!containsNumbers(fieldValue) || fieldValue == null || fieldValue == "" || length > numberLength) {
-        isNumber = false;
-        input.errorMessage = "Must contain only numbers."
-    } else {
-        isNumber = true;
-    }
-
-    return isNumber;
-}
-
-/**
- * 
- * @description Validates for an email address using a regex
- * @param field -- email address 
- * @returns isEmail -- bool whether or not field is a email address
- * 
- */
-const validateEmail = function (input) {
-    var isEmail = false;
-    var fieldValue = input.value;
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (re.test(fieldValue)) {
-        isEmail = true;
-    } else {
-        input.errorMessage = "Please enter a valid email address."
-        return isEmail;
-    }
-
-    return isEmail;
 }
 
 /**
@@ -131,4 +42,112 @@ const containsNumbers = function (fieldValue) {
     }
 
     return isNumber;
+}
+
+/**
+ * 
+ * @description Runs realtime validation on a text input
+ * @param input  -- should be the input field to validate 
+ * @param message --optional, allows you to send a custom error message to display
+ * @returns none
+ * 
+ */
+const validateText = function (input, message) {
+    input.addEventListener("keyup", function () {
+        if (containsText(input.value)) {
+            removeErrorMessage(input);
+        } else {
+            // This checks if a message was passed if not it sets a default one
+            if (message == null) {
+                displayErrorMessage(input, 'Please Enter Only Text');
+            } else {
+                displayErrorMessage(input, message);
+            }
+        }
+    })
+}
+
+/**
+ * 
+ * @description Validates for an email address using a regex
+ * @param input -- email address 
+ * @param message --optional, allows you to send a custom error message to display
+ * @returns isEmail -- bool whether or not field is a email address
+ * 
+ */
+const validateEmail = function (input, message) {
+    // var isEmail = false;
+    // var fieldValue = input.value;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    input.addEventListener("keyup", function () {
+        if (re.test(input.value)) {
+            removeErrorMessage(input);
+        } else {
+            // This checks if a message was passed if not it sets a default one
+            if (message == null) {
+                displayErrorMessage(input, 'Please Enter A Valid Email');
+            } else {
+                displayErrorMessage(input, message);
+            }
+        }
+    })
+}
+
+/**
+ * 
+ * @description Validates for a Number only, allows you to add an optional numberlength to test for
+ *              numbers that need a certain length, ex: Phone Numbers
+ *              Requires a number length if you want to define a message.
+ * @param field -- number to validate 
+ * @param numberlength --optional, allows you to test for a certain number length
+ * @param message --optional, allows you to send a custom error message to display
+ * @returns isNumber -- bool is it a number and optionally does it match the number length
+ * 
+ */
+const validateNumber = function (input, numberLength, message) {
+    var length = input.value.toString().length
+
+    input.addEventListener("keyup", function () {
+        if (!containsNumbers(input.value) || input.value == null || input.value == "" || length > numberLength) {
+            // This checks if a message was passed if not it sets a default one
+            if (message == null) {
+                displayErrorMessage(input, 'Must Contain Only Numbers');
+            } else {
+                displayErrorMessage(input, message);
+            }
+        } else {
+            removeErrorMessage(input);
+        }
+    })
+}
+
+/**
+ * 
+ * @description Removes the error message if there is one present
+ * @param input -- should be the input field to validate 
+ * @returns none
+ * 
+ */
+const removeErrorMessage = function (input) {
+    var inputID = input.id;
+    var errorDiv = inputID + '-error';
+    var errorMessage = document.getElementById(errorDiv);
+    input.classList.remove('input-error--message');
+}
+
+/**
+ * 
+ * @description Displays a error message if there is an error with the form
+ * @param input -- should be the input field to validate 
+ * @param message --optional, allows you to send a custom error message to display
+ * @returns none
+ * 
+ */
+const displayErrorMessage = function (input, message) {
+    var inputID = input.id;
+    var errorDiv = inputID + '-error';
+    var errorMessage = document.getElementById(errorDiv);
+    errorMessage.innerHTML = message;
+    input.classList.add('input-error--message');
 }

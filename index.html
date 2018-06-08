@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Form Validation</title>
+    <title>Form Validation Verison 2</title>
+
+    <link rel="stylesheet" href="css/validation.css">
 </head>
 
 <body>
@@ -17,11 +19,12 @@
 
         <label class="so" for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" required>
+        <span id="email-error" style="color: red;"></span>
 
         <label class="so" for="phone">Phone Number</label>
         <input type="tel" class="form-control" id="phone" name="phone" placeholder="xxx-xxx-xxxx" required>
 
-        <!-- <label class="so" for="dob-month">Date of Birth</label>
+        <label class="so" for="dob-month">Date of Birth</label>
 
         <input type="text" class="form-control" placeholder="MM" id="dob_month" name="dob_month" maxlength="2" title="Month" required
         />
@@ -29,8 +32,10 @@
         <input type="text" class="form-control" placeholder="DD" id="dob_day" name="dob_day" maxlength="2" title="Day" required />
 
         <input type="text" class="form-control" placeholder="YYYY" id="dob_year" name="dob_year" maxlength="4" title="Year" required
-        /> -->
+        />
 
+        <label class="so" for="phone">Zip Code</label>
+        <input type="text" class="form-control" id="zip" name="zip" placeholder="xxxxx" required>
 
         <button type="submit" id="submit-button">Learn More!</button>
 
